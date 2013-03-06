@@ -1,41 +1,19 @@
 #Introduction
 
-Willie is a simple, lightweight, open source, easy-to-use IRC Utility bot,
-written in Python. It's designed to be easy to use, run and extend.
+FlutterBitch is an IRC bot on Canternet that helps out with [BerryTube](http://berrytube.tv)
+related functions. Functionally, she is 99.9% similar to willie, a fork of jenni, which is 
+itself a fork of phenny, which is the bot that originally stayed in #MyLittleAlcoholic, 
+which is the original (as far as I know) alcoholic brony IRC. At the very least, it's the 
+official /r/mylittlealcoholic IRC room, so there's that.
 
-#Installation
+#Installation/Configuration/etc
 
-The easiest way is to simply run ``setup.py install``. Willie can also be run
-by copying ``scripts/willie`` to ``willie.py`` in the root of the source
-directory (i.e, the one with the ``scripts`` folder in it), and running that.
-You can also install the latest stable release of Willie through the Python
-Package Index by installing ``pip``, and then running ``pip install willie``.
-Willie is also available in the package repositories for Fedora 17 and 18.
+Installation is identical to the willie installation process So is editing modules and stuff. So is the configuration.
 
-#Adding modules
+#Why fork it, then?
 
-The easiest place to put new modules is in ``~/.willie/modules``. You will need
-to add a a line to the ``[core]`` section of your config file saying
-``extra = /home/yourname/.willie/modules``.
-
-Some extra modules are available in the
-[willie-extras](https://github.com/embolalia/willie-extras) repository, but of
-course you can also write new modules. A tutorial for creating new modules is
-available on the
-[wiki](https://github.com/embolalia/willie/wiki/How-To-Create-a-Willie-Module).
-API documentation can be found online at [http://willie.dftba.net/docs](), or
-you can create a local version by running ``make html`` in the ``doc``
-directory.
-
-#Further documentation
-
-In addition to the [official website](http://willie.dftba.net), there is also a
-[wiki](http://github.com/embolalia/willie/wiki) which includes valuable
-infomration including a full listing of
-[commands](https://github.com/embolalia/willie/wiki/Commands).
+Basically because I needed to edit some strings to make the bot bitchier, but also because there are at least two pony-specific modules that are very important to us, but probably not to anyone else.
 
 #Questions?
 
-Contact us on irc.dftba.net channel #tech
-
-For a list of contributions to the Jenni fork see the file ``CREDITS``.
+If it's an issue that's been in willie but not yet in FlutterBitch, just pop in to #BerryTube on irc.canternet.org and let miggyb know, but if it's affecting willie as well, their support thing is #tech on irc.dftba.net and they're probably a bit more knowledgeable about it anyway
