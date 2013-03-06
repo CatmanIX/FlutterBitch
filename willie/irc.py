@@ -38,7 +38,7 @@ from tools import verify_ssl_cn
 
 
 class Origin(object):
-    source = re.compile(r'([^!]*)!?([^@]*)@?(.*)')
+    source = re.compile(r'([^!]*)!?([^@]*)@?(.*)', re.IGNORECASE)
 
     def __init__(self, bot, source, args):
         #Split out the nick, user, and host from hostmask per the regex above.
