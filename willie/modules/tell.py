@@ -100,12 +100,23 @@ def f_remind(willie, trigger):
                 willie.memory['reminders'][tellee].append((teller, verb, timenow, msg))
         finally:
             willie.memory['tell_lock'].release()
-
-        response = "I'll pass that on when %s is around." % tellee
+        
+        responses = [
+            "%s doesn't care, but I'll force it in conversation.",
+            "%s is probably just ignoring you.",
+            "Sure, I'll tell %s that right after you go outside once for in your life.",
+            "Sure says something when %s gives me more attention than they give you, doesn't it?",
+            "Sure, fine, whatever. I'll leave %s your message.",
+            "Alright, but I apologize in advance if %s just doesn't care.",
+            "Alright, next time I see %s I'll tell them that, just so you don't have to worry about spilling spaghetti on yourself.",
+            "I'll leave that with %s. Later. If I feel like it.",
+            "Aaalright, if you insist, but %s probably thinks you're just drunk right now.",
+        ]
+        response = random.choice(responses) % tellee
 
         willie.reply(response)
     elif Nick(teller) == tellee:
-        willie.say('You can %s yourself that.' % verb)
+        willie.say("Look at me, I'm %s and I'm super clever at breaking IRC bots! I'm oozing cleverness!" % teller)
     else: willie.say("Hey, I'm not as stupid as Monty you know!")
 
     dumpReminders(willie.tell_filename, willie.memory['reminders'], willie.memory['tell_lock']) # @@ tell
