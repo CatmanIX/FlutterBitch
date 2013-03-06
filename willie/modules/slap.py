@@ -18,7 +18,34 @@ def slap(willie, trigger):
     if text[1] in willie.config.admins:
         if (trigger.nick not in willie.config.admins):
             text[1] = trigger.nick
-    verb = random.choice(('slaps', 'kicks', 'destroys', 'annihilates', 'punches', 'roundhouse kicks', 'pwns', 'owns'))
+    attacks = [
+      "slaps",
+      "kicks",
+      "destroys",
+      "annihilates",
+      "roundhouse kicks",
+      "rusty hooks",
+      "wingslaps",
+      "hoofstomps",
+      "Berry Punches",
+      "laser beams",
+      "bucks",
+      "suplexes",
+      "insults",
+      "Flutterstares",
+      "Twieyes",
+      "backhoofs",
+      "suffocates",
+      "guilt trips",
+      "flies up to the stratosphere and drops",
+      "threatens legal action against",
+      "neuters",
+      "violently neuters",
+      "shoves",
+      "yells at",
+    ]
+
+    verb = random.choice(attacks)
     willie.write(['PRIVMSG', trigger.sender, ' :\x01ACTION', verb, text[1], '\x01'])
 slap.commands = ['slap', 'slaps']
 slap.priority = 'medium'
