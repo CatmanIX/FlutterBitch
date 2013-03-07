@@ -501,10 +501,17 @@ def say_fact(willie, trigger):
         except KeyError:
             willie.say('I have no idea')
         return
-    elif search_term.startswith('reload') or search_term.startswith('update') or inhibit == trigger:
+    elif  (
+        search_term.startswith('reload') or
+        search_term.startswith('update') or 
+        search_term.startswith('tell') or 
+        search_term.startswith('ask') or 
+        search_term.startswith('help') or 
+        inhibit == trigger
+        ):
         # ignore commands such as reload or update, don't show 'Don't Know'
         # responses for these
-        return
+            return
 
     db = connect_db(willie)
     cur = db.cursor()
