@@ -32,30 +32,33 @@ def calculate(trigger):
         answer = web.decode(answer)
         return answer
     else:
-        return 'Sorry, no result.'
+        return 'No result.'
 
 
 def c(willie, trigger):
     """Google calculator."""
     if not trigger.group(2):
-        return willie.reply("Nothing to calculate.")
+        return willie.reply("Hmph. Garbage.")
     result = calculate(trigger.group(2))
-    willie.reply(result)
+    if result == 'No result.':
+        willie.reply("Hmph. Garbage.")
+    else: 
+        willie.reply("It's %s. You should really go back and finish your GED." % result)
 c.commands = ['c', 'calc']
 c.example = '.c 5 + 3'
 
 
-def py(willie, trigger):
-    """Evaluate a Python expression."""
-    query = trigger.group(2).encode('utf-8')
-    uri = 'http://tumbolia.appspot.com/py/'
-    answer = web.get(uri + web.quote(query))
-    if answer:
-        willie.say(answer)
-    else:
-        willie.reply('Sorry, no result.')
-py.commands = ['py']
-py.example = '.py len([1,2,3])'
+#def py(willie, trigger):
+#    """Evaluate a Python expression."""
+#    query = trigger.group(2).encode('utf-8')
+#    uri = 'http://tumbolia.appspot.com/py/'
+#    answer = web.get(uri + web.quote(query))
+#    if answer:
+#        willie.say(answer)
+#    else:
+#        willie.reply('No result.')
+#py.commands = ['py']
+#py.example = '.py len([1,2,3])'
 
 
 def wa(willie, trigger):
@@ -88,7 +91,7 @@ def wa(willie, trigger):
                        + waOutputArray[1])
         waOutputArray = []
     else:
-        willie.reply('Sorry, no result.')
+        willie.reply('No result, jerkface.')
 wa.commands = ['wa', 'wolfram']
 wa.example = '.wa circumference of the sun * pi'
 wa.commands = ['wa']
