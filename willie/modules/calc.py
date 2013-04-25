@@ -14,8 +14,7 @@ import string
 import HTMLParser
 
 
-def calculate(trigger):
-    q = trigger.encode('utf-8')
+def calculate(q):
     q = q.replace('\xcf\x95', 'phi')  # utf-8 U+03D5
     q = q.replace('\xcf\x80', 'pi')  # utf-8 U+03C0
     uri = 'http://www.google.com/ig/calculator?q='
@@ -46,26 +45,11 @@ def c(willie, trigger):
         willie.reply("It's %s. You should really go back and finish your GED." % result)
 c.commands = ['c', 'calc']
 c.example = '.c 5 + 3'
-
-
-#def py(willie, trigger):
-#    """Evaluate a Python expression."""
-#    query = trigger.group(2).encode('utf-8')
-#    uri = 'http://tumbolia.appspot.com/py/'
-#    answer = web.get(uri + web.quote(query))
-#    if answer:
-#        willie.say(answer)
-#    else:
-#        willie.reply('No result.')
-#py.commands = ['py']
-#py.example = '.py len([1,2,3])'
-
-
 def wa(willie, trigger):
     """Wolfram Alpha calculator"""
     if not trigger.group(2):
         return willie.reply("No search term.")
-    query = trigger.group(2).encode('utf-8')
+    query = trigger.group(2)
     uri = 'http://tumbolia.appspot.com/wa/'
     try:
         answer = web.get(uri + web.quote(query.replace('+', '%2B')), 45)

@@ -18,12 +18,12 @@ try:
     from willie.__init__ import run
     from willie.config import Config, create_config, ConfigurationError, wizard
     import willie.tools as tools
-    from willie.tools import stderr, stdout
+    from willie.tools import stderr
 except ImportError:
     from __init__ import run
     from config import Config, create_config, ConfigurationError
     import tools
-    from tools import stderr, stdout
+    from tools import stderr
 
 willie_dotdir = os.path.join(os.path.expanduser('~'), '.willie')
 jenni_dotdir = os.path.join(os.path.expanduser('~'), '.jenni')
@@ -222,7 +222,7 @@ def main(argv=None):
                     os.kill(old_pid, signal.SIGKILL)
                     sys.exit(0)
                 elif opts.quit:
-                    stderr('Singaling Willie to stop gracefully')
+                    stderr('Signaling Willie to stop gracefully')
                     os.kill(old_pid, signal.SIGUSR1)
                     sys.exit(0)
             elif not tools.check_pid(old_pid) and (opts.kill or opts.quit):
