@@ -177,9 +177,10 @@ show_title_auto.priority = 'high'
 
 def show_title_demand (willie, trigger):
     """Show the title of a URL"""
-    #try:
-    results = get_results(trigger)
-    #except: return
+    try:
+        results = get_results(trigger)
+    except: return
+    
     if results is None: return
 
     for r in results:
