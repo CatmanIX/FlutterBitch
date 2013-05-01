@@ -10,7 +10,7 @@ import praw
 import re
 
 def setup(willie):
-    regex = re.compile('http(?:s)?://(www\.)?reddit\.com/(r/.*?/comments/[\w-]+|u(ser)?/[\w-]+)')
+    regex = re.compile('(?:(?:https?://)?(?:www.)?)?(?:(?:(?:np\.)?reddit\.com/(?:(?:r/[_\-A-Za-z\d]+/comments)|(?:tb)))|redd\.it)/([_\-A-Za-z\d]+)')
     if not willie.memory.contains('url_exclude'):
         willie.memory['url_exclude'] = [regex]
     else:
@@ -20,20 +20,25 @@ def setup(willie):
 
 def rpost_info(willie, trigger):
     r = praw.Reddit(user_agent='phenny / willie IRC bot - see dft.ba/-williesource for more')
-    s = r.get_submission(url=trigger.group(1))
+    s = r.get_submission(submission_id=trigger.group(1))
     
-    message = '[REDDIT] '+s.title
+    message = s.title
     if s.is_self: message = message + ' (self.' + s.subreddit.display_name + ')'
-    else: message = message + ' (' + s.url + ')' +' to r/'+s.subreddit.display_name
+    else: message = message + ' | /r/' + s.subreddit.display_name
+    try:
+        author = s.author.name
+    except AttributeError:
+        author = "14[deleted]"
     if s.over_18:
-        message = message + ' 05[NSFW]'
+        message = '05[NSFW] ' + message + ' 05[NSFW]'
         #TODO implement per-channel settings db, and make this able to kick
-    message = message +' | ' + str(s.ups-s.downs)+' points (03'\
-                      +str(s.ups)+'|05'+str(s.downs)+') | '+str(s.num_comments)\
-                      +' comments | Posted by '+s.author.name
+    message = message +' | ' + str(s.ups-s.downs)+' points (04+'\
+                      +str(s.ups)+'|12-'+str(s.downs)+') | '+str(s.num_comments)\
+                      +' comments | Posted by '+author
     #TODO add creation time with s.created
     willie.say(message)
-rpost_info.rule = '.*(http(?:s)?://(www\.)?reddit\.com/r/.*?/comments/[\w-]+).*'
+
+rpost_info.rule = '.*(?:(?:https?://)?(?:www.)?)?(?:(?:(?:np\.)?reddit\.com/(?:(?:r/[_\-A-Za-z\d]+/comments)|(?:tb)))|redd\.it)/([_\-A-Za-z\d]+)'
 
 def redditor_info(willie, trigger):
     """Show information about the given Redditor"""
