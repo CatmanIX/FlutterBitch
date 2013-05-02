@@ -23,17 +23,19 @@ def setup(willie):
 def rpost_info(willie, trigger):
     r = praw.Reddit(user_agent='phenny / willie IRC bot - see dft.ba/-williesource for more')
     s = r.get_submission(submission_id=trigger.group(1))
-    
-    message = s.title
-    if s.is_self: message = message + ' (self.' + s.subreddit.display_name + ')'
-    else: message = message + ' | /r/' + s.subreddit.display_name
+
+    title = s.title
+    if not s.is_self:
+        regex = re.compile('^(?:\w+://)([\._\-\w]+)(?:$|/)')
+        hostname = regex.search(s.url)
+        title = '%s (%s)' % (s.title, hostname.groups()[0]) 
 
     if s.author is not None:
         author = s.author.name
     else: author = '14[deleted]'
 
     if s.over_18:
-        message = '05[NSFW] ' + message + ' 05[NSFW]'
+        title = '05[NSFW] ' + title + ' 05[NSFW]'
         #TODO implement per-channel settings db, and make this able to kick
 
     rd = relativedelta(datetime.utcnow(),
@@ -71,9 +73,9 @@ def rpost_info(willie, trigger):
     comments_plural = '' 
     if s.num_comments != 1: comments_plural = 's'
          
-    message = ('%s | %d point%s (04+%d/12-%d) | %d comment%s | Submitted %d%s ago by %s'
-        % (message, votes, points_plural, s.ups, s.downs, s.num_comments, comments_plural,
-        time, units, author))  
+    message = ('%s | %d point%s (+%d/-%d) | %d comment%s | Submitted %d%s ago by %s to /r/%s'
+        % (title, votes, points_plural, s.ups, s.downs, s.num_comments, comments_plural,
+        time, units, author, s.subreddit.display_name))  
 
     willie.say(message)
 
