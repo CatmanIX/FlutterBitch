@@ -8,9 +8,11 @@ This module provides special tools for reddit, namely showing detailed info abou
 
 import praw
 import re
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 def setup(willie):
-    regex = re.compile('(?:(?:https?://)?(?:www.)?)?(?:(?:(?:np\.)?reddit\.com/(?:(?:r/[_\-A-Za-z\d]+/comments)|(?:tb)))|redd\.it)/([_\-A-Za-z\d]+)')
+    regex = re.compile('(?:(?:https?://)?(?:www\.)?(?:\w\w(?:\-\w\w))?)?(?:(?:reddit\.com/(?:(?:r/\w+/comments)|(?:tb)))|redd\.it)/(\w+)')
     if not willie.memory.contains('url_exclude'):
         willie.memory['url_exclude'] = [regex]
     else:
@@ -25,20 +27,57 @@ def rpost_info(willie, trigger):
     message = s.title
     if s.is_self: message = message + ' (self.' + s.subreddit.display_name + ')'
     else: message = message + ' | /r/' + s.subreddit.display_name
-    try:
+
+    if s.author is not None:
         author = s.author.name
-    except AttributeError:
-        author = "14[deleted]"
+    else: author = '14[deleted]'
+
     if s.over_18:
         message = '05[NSFW] ' + message + ' 05[NSFW]'
         #TODO implement per-channel settings db, and make this able to kick
-    message = message +' | ' + str(s.ups-s.downs)+' points (04+'\
-                      +str(s.ups)+'|12-'+str(s.downs)+') | '+str(s.num_comments)\
-                      +' comments | Posted by '+author
-    #TODO add creation time with s.created
+
+    rd = relativedelta(datetime.utcnow(),
+        datetime.utcfromtimestamp(s.created_utc))
+    time = 0
+    units ='ms'
+
+    if rd.microseconds:
+        time = str(rd.microseconds / 1000)
+    if rd.seconds:
+        time = rd.seconds
+        units = ' second'
+    if rd.minutes:
+        time = rd.minutes
+        units = ' minute'
+    if rd.hours:
+        time = rd.hours
+        units = ' hour'
+    if rd.days:
+        time = rd.days
+        units = ' day'
+    if rd.months:
+        time = rd.months
+        units = ' month'
+    if rd.years:
+        time = rd.years
+        units = ' year'
+    if time != 1 and units != 'ms':
+        units = units + 's'
+
+    votes = s.ups - s.downs
+    points_plural = ''
+    if votes != 1: points_plural = 's'
+    
+    comments_plural = '' 
+    if s.num_comments != 1: comments_plural = 's'
+         
+    message = ('%s | %d point%s (04+%d/12-%d) | %d comment%s | Submitted %d%s ago by %s'
+        % (message, votes, points_plural, s.ups, s.downs, s.num_comments, comments_plural,
+        time, units, author))  
+
     willie.say(message)
 
-rpost_info.rule = '.*(?:(?:https?://)?(?:www.)?)?(?:(?:(?:np\.)?reddit\.com/(?:(?:r/[_\-A-Za-z\d]+/comments)|(?:tb)))|redd\.it)/([_\-A-Za-z\d]+)'
+rpost_info.rule = '.*(?:(?:https?://)?(?:www\.)?(?:\w\w(?:\-\w\w))?)?(?:(?:reddit\.com/(?:(?:r/\w+/comments)|(?:tb)))|redd\.it)/(\w+)'
 
 def redditor_info(willie, trigger):
     """Show information about the given Redditor"""
