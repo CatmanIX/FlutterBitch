@@ -12,7 +12,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 def setup(willie):
-    regex = re.compile('(?:(?:https?://)?(?:www\.)?(?:\w\w(?:\-\w\w))?)?(?:(?:reddit\.com/(?:(?:r/\w+/comments)|(?:tb)))|redd\.it)/(\w+)')
+    regex = re.compile('(?:(?:https?://)?(?:www\.)?(?:\w\w(?:\-\w\w)\.)?)?(?:(?:reddit\.com/(?:(?:r/\w+/comments)|(?:tb)))|redd\.it)/(\w+)')
     if not willie.memory.contains('url_exclude'):
         willie.memory['url_exclude'] = [regex]
     else:
@@ -77,7 +77,7 @@ def rpost_info(willie, trigger):
 
     willie.say(message)
 
-rpost_info.rule = '.*(?:(?:https?://)?(?:www\.)?(?:\w\w(?:\-\w\w))?)?(?:(?:reddit\.com/(?:(?:r/\w+/comments)|(?:tb)))|redd\.it)/(\w+)'
+rpost_info.rule = '.*(?:(?:https?://)?(?:www\.)?(?:\w\w(?:\-\w\w)\.)?)?(?:(?:reddit\.com/(?:(?:r/\w+/comments)|(?:tb)))|redd\.it)/(\w+)'
 
 def redditor_info(willie, trigger):
     """Show information about the given Redditor"""
