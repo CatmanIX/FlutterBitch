@@ -15,6 +15,7 @@ import HTMLParser
 
 
 def calculate(q):
+    q = q.encode('utf8')
     q = q.replace('\xcf\x95', 'phi')  # utf-8 U+03D5
     q = q.replace('\xcf\x80', 'pi')  # utf-8 U+03C0
     uri = 'http://www.google.com/ig/calculator?q='
@@ -45,6 +46,7 @@ def c(willie, trigger):
         willie.reply("It's %s. You should really go back and finish your GED." % result)
 c.commands = ['c', 'calc']
 c.example = '.c 5 + 3'
+
 def wa(willie, trigger):
     """Wolfram Alpha calculator"""
     if not trigger.group(2):
@@ -54,7 +56,7 @@ def wa(willie, trigger):
     try:
         answer = web.get(uri + web.quote(query.replace('+', '%2B')), 45)
     except timeout as e:
-        return willie.say('[WOLFRAM ERROR] Request timed out')
+        return willie.say('Request timed out')
     if answer:
         answer = answer.decode('string_escape')
         answer = HTMLParser.HTMLParser().unescape(answer)
@@ -71,7 +73,7 @@ def wa(willie, trigger):
             willie.say('[WOLFRAM ERROR]' + answer)
         else:
 
-            willie.say('[WOLFRAM] ' + waOutputArray[0] + " = "
+            willie.say('[Wolfram] ' + waOutputArray[0] + " = "
                        + waOutputArray[1])
         waOutputArray = []
     else:
