@@ -209,15 +209,20 @@ track_nicks.event = 'NICK'
 
 
 def track_part(willie, trigger):
-    if trigger.nick == willie.nick and trigger.sender in willie.channels:
+    if trigger.nick == willie.nick:
         willie.channels.remove(trigger.sender)
 track_part.rule = r'(.*)'
 track_part.event = 'PART'
 
+def track_kick(willie, trigger):
+    if trigger.args[1] == willie.nick:
+        willie.channels.remove(trigger.sender)
+track_kick.rule = r'.*'
+track_kick.event = 'KICK'
 
 def track_join(willie, trigger):
-    if trigger.nick == willie.nick and trigger.groups(1) in willie.channels:
-        willie.channels.append(trigger.groups(1))
+    if trigger.nick == willie.nick and trigger.sender not in willie.channels:
+        willie.channels.append(trigger.sender)
 track_join.rule = r'(.*)'
 track_join.event = 'JOIN'
 
@@ -243,8 +248,9 @@ def blocks(willie, trigger):
         'huh': "I could not figure out what you wanted to do.",
     }
 
-    masks = willie.config.core.host_blocks
-    nicks = willie.config.core.nick_blocks
+    masks = willie.config.core.get_list('host_blocks')
+    nicks = [Nick(nick) for nick in willie.config.core.get_list('nick_blocks')]
+    print masks, nicks
     text = trigger.group().split()
 
     if len(text) == 3 and text[1] == "list":
@@ -282,7 +288,7 @@ def blocks(willie, trigger):
     elif len(text) == 4 and text[1] == "del":
         if text[2] == "nick":
             try:
-                nicks.remove(text[3])
+                nicks.remove(Nick(text[3]))
                 willie.config.core.nick_blocks = nicks
                 willie.config.save()
                 willie.reply(STRINGS['success_del'] % (text[3]))

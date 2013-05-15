@@ -144,6 +144,8 @@ class Bot(asynchat.async_chat):
         '''Remove newlines from a string'''
         string = string.replace('\n', '')
         string = string.replace('\r', '')
+        if not isinstance(string, unicode):
+            string = unicode(string, encoding='utf8')
         return string
 
 
@@ -307,7 +309,7 @@ class Bot(asynchat.async_chat):
         """ Replacement for self.recv() during SSL connections. From:
         http://evanfosmark.com/2010/09/ssl-support-in-asynchatasync_chat """
         try:
-            data = self.read(buffer_size)
+            data = self.socket.read(buffer_size)
             if not data:
                 self.handle_close()
                 return ''
@@ -328,7 +330,21 @@ class Bot(asynchat.async_chat):
         stderr('Closed!')
 
     def collect_incoming_data(self, data):
-        data = unicode(data, encoding='utf-8')
+        # We can't trust clients to pass valid unicode.
+        try:
+            data = unicode(data, encoding='utf-8')
+        except UnicodeDecodeError:
+            # not unicode, let's try cp1252
+            try:
+                data = unicode(data, encoding='cp1252')
+            except UnicodeDecodeError:
+                # Okay, let's try ISO8859-1
+                try:
+                    data = unicode(data, encoding='iso8859-1')
+                except:
+                    # Discard line if encoding is unknown
+                    return
+        
         if data:
             self.log_raw(data)
         self.buffer += data
@@ -389,7 +405,7 @@ class Bot(asynchat.async_chat):
                     return
 
             self.write(('PRIVMSG', recipient), text)
-            self.stack.append((time.time(), text))
+            self.stack.append((time.time(), self.safe(text)))
             self.stack = self.stack[-10:]
         finally:
             self.sending.release()
@@ -456,9 +472,11 @@ class Bot(asynchat.async_chat):
         logfile = codecs.open(os.path.join(self.config.logdir,
                                     'exceptions.log'), 'a', encoding='utf-8')  # TODO: make not
                                                              # hardcoded
-        logfile.write('Fatal error in core, handle_error() was called')
+        logfile.write('Fatal error in core, handle_error() was called\n')
         logfile.write('last raw line was %s' % self.raw)
         logfile.write(trace)
+        logfile.write('Buffer:\n')
+        logfile.write(self.buffer)
         logfile.write('----------------------------------------\n\n')
         logfile.close()
         if self.error_count > 10:
@@ -467,6 +485,9 @@ class Bot(asynchat.async_chat):
                 os._exit(1)
         self.last_error_timestamp = datetime.now()
         self.error_count = self.error_count + 1
+        # Clearing buffer is important, it will cause willie to lose some lines,
+        # But it is vital if the exception happened before found_terminator()
+        self.buffer = ''
 
     #Helper functions to maintain the oper list.
     #They cast to Nick when adding to be quite sure there aren't any accidental
