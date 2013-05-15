@@ -70,7 +70,7 @@ def wa(willie, trigger):
             answer = answer.replace('\:' + char_code, char)
         waOutputArray = string.split(answer, ";")
         if(len(waOutputArray) < 2):
-            willie.say('[WOLFRAM ERROR]' + answer)
+            willie.say('[Wolfram Error]' + answer)
         else:
 
             willie.say('[Wolfram] ' + waOutputArray[0] + " = "
