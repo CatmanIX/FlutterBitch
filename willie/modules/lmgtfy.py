@@ -13,6 +13,7 @@ def issue(willie, trigger):
         return willie.say('http://google.com/')
     willie.say('http://lmgtfy.com/?q='+trigger.group(2).replace(' ','+'))
 issue.commands = ['lmgtfy','lmgify','gify','gtfy']
+issue.rule = '^dye(\s*)(.*)'
 issue.priority = 'medium'
 
 if __name__ == '__main__':
