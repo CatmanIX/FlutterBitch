@@ -5,13 +5,15 @@ Licensed under the Eiffel Forum License 2.
 
 http://willie.dftba.net/
 """
+import urllib
 
 def issue(willie, trigger):
     """Let me just... google that for you."""
     #No input
     if not trigger.group(2):
         return willie.say('http://google.com/')
-    willie.say('http://lmgtfy.com/?q='+trigger.group(2).replace(' ','+'))
+    encoded = urllib.urlencode(dict(q=trigger.group(2)))
+    willie.say('http://lmgtfy.com/?' + encoded)
 issue.commands = ['lmgtfy','lmgify','gify','gtfy']
 issue.rule = '^dye(\s*)(.*)'
 issue.priority = 'medium'
