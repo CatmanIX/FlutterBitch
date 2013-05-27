@@ -11,11 +11,11 @@ def issue(willie, trigger):
     """Let me just... google that for you."""
     #No input
     if not trigger.group(2):
-        return willie.say('http://google.com/')
+        return
     encoded = urllib.urlencode(dict(q=trigger.group(2)))
     willie.say('http://lmgtfy.com/?' + encoded)
 issue.commands = ['lmgtfy','lmgify','gify','gtfy']
-issue.rule = '^dye(\s*)(.*)'
+issue.rule = '^(?:bros?)?\s*(do you even|dye)\s*(.*)(bro)?'
 issue.priority = 'medium'
 
 if __name__ == '__main__':
