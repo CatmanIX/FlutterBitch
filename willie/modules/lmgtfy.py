@@ -15,7 +15,7 @@ def issue(willie, trigger):
     encoded = urllib.urlencode(dict(q=trigger.group(2)))
     willie.say('http://lmgtfy.com/?' + encoded)
 issue.commands = ['lmgtfy','lmgify','gify','gtfy']
-issue.rule = '^(?:bros?)?\s*(do you even|dye)\s*(.*)(bro)?'
+issue.rule = '^(?:bros?,?\.?)?\s*(do you even,?\.?|dye,?\.?)\s*((?:(?:.*)(?= bros?\??))|(?:(?:.*)(?=bros?\??))|(?:.*)(?=\?)|(?:.*))'
 issue.priority = 'medium'
 
 if __name__ == '__main__':
