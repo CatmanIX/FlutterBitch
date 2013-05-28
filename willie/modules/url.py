@@ -206,17 +206,7 @@ def find_title(url):
             cp = name2codepoint[entity[1:-1]]
         return unichr(cp)
 
-<<<<<<< HEAD
-def show_title_demand (willie, trigger):
-    """Show the title of a URL"""
-    #try:
-    results = get_results(trigger)
-    #except: return
-    
-    if results is None: return
-=======
     title = r_entity.sub(get_unicode_entity, title)
->>>>>>> 1e0cdcaeefa243980bb29c074456d5e33cf1abf5
 
     title = ' '.join(title.split())  # cleanly remove multiple spaces
 

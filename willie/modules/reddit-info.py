@@ -8,7 +8,6 @@ This module provides special tools for reddit, namely showing detailed info abou
 
 import praw
 import re
-<<<<<<< HEAD
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -20,7 +19,6 @@ def setup(willie):
         exclude = willie.memory['url_exclude']
         exclude.append(regex)
         willie.memory['url_exclude'] = exclude
-=======
 domain = r'https?://(?:www\.|np\.)?reddit\.com'
 post_url = '(%s/r/.*?/comments/[\w-]+)' % domain
 user_url = '%s/u(ser)?/([\w-]+)' % domain
@@ -34,11 +32,9 @@ def setup(willie):
     willie.memory['url_callbacks'][post_regex] = rpost_info
     willie.memory['url_callbacks'][user_regex] = redditor_info
 
->>>>>>> 1e0cdcaeefa243980bb29c074456d5e33cf1abf5
 
 def rpost_info(willie, trigger, match=None):
     r = praw.Reddit(user_agent='phenny / willie IRC bot - see dft.ba/-williesource for more')
-<<<<<<< HEAD
     s = r.get_submission(submission_id=trigger.group(1))
 
     title = s.title
@@ -51,7 +47,6 @@ def rpost_info(willie, trigger, match=None):
         author = s.author.name
     else: author = '14[deleted]'
 
-=======
     match = match or trigger
     s = r.get_submission(url=match.group(1))
 
@@ -60,11 +55,9 @@ def rpost_info(willie, trigger, match=None):
         message = message + ' (self.' + s.subreddit.display_name + ')'
     else:
         message = message + ' (' + s.url + ')' + ' to r/' + s.subreddit.display_name
->>>>>>> 1e0cdcaeefa243980bb29c074456d5e33cf1abf5
     if s.over_18:
         title = '05[NSFW] ' + title + ' 05[NSFW]'
         #TODO implement per-channel settings db, and make this able to kick
-<<<<<<< HEAD
 
     rd = relativedelta(datetime.utcnow(),
         datetime.utcfromtimestamp(s.created_utc))
@@ -106,17 +99,7 @@ def rpost_info(willie, trigger, match=None):
         time, units, author, s.subreddit.display_name))  
 
     willie.say(message)
-
 rpost_info.rule = '.*(?:(?:https?://)?(?:www\.)?(?:\w\w(?:\-\w\w)\.)?)?(?:(?:reddit\.com/(?:(?:r/\w+/comments)|(?:tb)))|redd\.it)/(\w+)'
-=======
-    message = (message + ' | ' + str(s.ups - s.downs) + ' points (03'
-               + str(s.ups) + '|05' + str(s.downs) + ') | ' +
-               str(s.num_comments) + ' comments | Posted by ' + s.author.name)
-    #TODO add creation time with s.created
-    willie.say(message)
-rpost_info.rule = '.*%s.*' % post_url
->>>>>>> 1e0cdcaeefa243980bb29c074456d5e33cf1abf5
-
 
 def redditor_info(willie, trigger, match=None):
     """Show information about the given Redditor"""
