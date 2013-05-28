@@ -91,7 +91,6 @@ def wa(willie, trigger):
         willie.reply('No result, jerkface.')
 wa.commands = ['wa', 'wolfram', 'wolf']
 wa.example = '.wa circumference of the sun * pi'
-wa.commands = ['wa']
 
 if __name__ == '__main__':
     print __doc__.strip()
