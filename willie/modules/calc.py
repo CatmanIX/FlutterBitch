@@ -12,7 +12,7 @@ import willie.web as web
 from socket import timeout
 import string
 import HTMLParser
-
+import random
 
 def calculate(q):
     q = q.encode('utf8')
@@ -42,8 +42,19 @@ def c(willie, trigger):
     result = calculate(trigger.group(2))
     if result == 'No result.':
         willie.reply("Hmph. Garbage.")
-    else: 
-        willie.reply("It's %s. You should really go back and finish your GED." % result)
+    else:
+        responses = [
+            "It's %s. You should really go back and finish your GED.",
+            "%s, stupidhead",
+            "Really? It's %s.",
+            "%s. Now leave me alone.",
+            "%s, obviously.",
+            "%s. Literally third grade math.",
+            "%s, I didn't even have to look that one up.",
+            "Seriously? %s. Wow.",
+            "%s. I'd explain to you how I got that result, but neither one of us would survive the attempt."
+        ]
+        willie.reply(random.choice(responses) % result)
 c.commands = ['c', 'calc']
 c.example = '.c 5 + 3'
 
@@ -78,7 +89,7 @@ def wa(willie, trigger):
         waOutputArray = []
     else:
         willie.reply('No result, jerkface.')
-wa.commands = ['wa', 'wolfram']
+wa.commands = ['wa', 'wolfram', 'wolf']
 wa.example = '.wa circumference of the sun * pi'
 wa.commands = ['wa']
 
